@@ -1,0 +1,315 @@
+{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "http"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "This is a API for teller in charge of customer data and customer financial transactions",
+    "title": "Teller System API.",
+    "contact": {
+      "email": "muhammadarash1997@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "host": "localhost:8080",
+  "basePath": "/",
+  "paths": {
+    "/api/customer": {
+      "post": {
+        "description": "Input new customer data",
+        "tags": [
+          "customer"
+        ],
+        "operationId": "inputCustomerData",
+        "parameters": [
+          {
+            "description": "Customer account_id and customer name that needs to be registered",
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "account_id": {
+                  "type": "integer",
+                  "format": "uint64",
+                  "x-go-name": "AccountId"
+                },
+                "name": {
+                  "type": "string",
+                  "x-go-name": "Name"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/inputCustomerData"
+          },
+          "422": {
+            "$ref": "#/responses/messageResponse"
+          },
+          "500": {
+            "$ref": "#/responses/messageResponse"
+          }
+        }
+      }
+    },
+    "/api/passbook/{account_id}/{start_date}/{end_date}": {
+      "get": {
+        "description": "Find customer passbooks",
+        "tags": [
+          "passbook"
+        ],
+        "operationId": "findPassbooksCustomer",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/findPassbooksCustomer"
+          },
+          "400": {
+            "$ref": "#/responses/messageResponse"
+          },
+          "500": {
+            "$ref": "#/responses/messageResponse"
+          }
+        }
+      }
+    },
+    "/api/point": {
+      "get": {
+        "description": "Find points of all customer",
+        "tags": [
+          "customer"
+        ],
+        "operationId": "findAllPoints",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/findAllPoints"
+          },
+          "500": {
+            "$ref": "#/responses/messageResponse"
+          }
+        }
+      }
+    },
+    "/api/test": {
+      "get": {
+        "description": "Test API",
+        "tags": [
+          "test"
+        ],
+        "operationId": "testAPI",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/testAPI"
+          }
+        }
+      }
+    },
+    "/api/transaction": {
+      "post": {
+        "description": "Inpit transaction",
+        "tags": [
+          "transaction"
+        ],
+        "operationId": "inputTransaction",
+        "parameters": [
+          {
+            "description": "Transaction object that needs to be stored",
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Transaction"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/messageResponse"
+          },
+          "422": {
+            "$ref": "#/responses/messageResponse"
+          },
+          "500": {
+            "$ref": "#/responses/messageResponse"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Customer": {
+      "description": "Entity",
+      "type": "object",
+      "properties": {
+        "account_id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "AccountId"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "total_point": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "TotalPoint"
+        }
+      },
+      "x-go-package": "teller-system/customer"
+    },
+    "Customers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Customer"
+      },
+      "x-go-package": "teller-system/customer"
+    },
+    "Passbook": {
+      "description": "Domain",
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Amount"
+        },
+        "credit": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Credit"
+        },
+        "debit": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Debit"
+        },
+        "description": {
+          "type": "string",
+          "x-go-name": "Description"
+        },
+        "transaction_date": {
+          "type": "string",
+          "format": "date-time",
+          "x-go-name": "TransactionDate"
+        }
+      },
+      "x-go-package": "teller-system/passbook"
+    },
+    "Passbooks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Passbook"
+      },
+      "x-go-package": "teller-system/passbook"
+    },
+    "Transaction": {
+      "description": "Entity",
+      "type": "object",
+      "properties": {
+        "account_id": {
+          "type": "integer",
+          "format": "uint64",
+          "x-go-name": "AccountId"
+        },
+        "amount": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Amount"
+        },
+        "debit_credit_status": {
+          "type": "string",
+          "x-go-name": "DebitCreditStatus"
+        },
+        "description": {
+          "type": "string",
+          "x-go-name": "Description"
+        },
+        "transaction_date": {
+          "type": "string",
+          "format": "date-time",
+          "x-go-name": "TransactionDate"
+        }
+      },
+      "x-go-package": "teller-system/transaction"
+    }
+  },
+  "responses": {
+    "findAllPoints": {
+      "description": "",
+      "schema": {
+        "$ref": "#/definitions/Customers"
+      },
+      "headers": {
+        "Body": {
+          "description": "in: Body"
+        }
+      }
+    },
+    "findPassbooksCustomer": {
+      "description": "",
+      "schema": {
+        "$ref": "#/definitions/Passbooks"
+      },
+      "headers": {
+        "Body": {
+          "description": "in: Body"
+        }
+      }
+    },
+    "inputCustomerData": {
+      "description": "",
+      "schema": {
+        "$ref": "#/definitions/Customer"
+      },
+      "headers": {
+        "Body": {
+          "description": "in: Body"
+        }
+      }
+    },
+    "messageResponse": {
+      "description": "",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "x-go-name": "Message"
+          }
+        }
+      },
+      "headers": {
+        "Body": {
+          "description": "in: Body"
+        }
+      }
+    },
+    "testAPI": {
+      "description": "Success testing API",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "x-go-name": "Message"
+          }
+        }
+      },
+      "headers": {
+        "Body": {
+          "description": "in: Body"
+        }
+      }
+    }
+  }
+}
